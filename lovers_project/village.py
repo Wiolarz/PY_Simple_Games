@@ -1,15 +1,16 @@
 import random
 import combat
 import universe
+import tools
 
 from enum import Enum
 
 
 
-
+# global variable
 world = universe.class_world()
 
-# global variable
+
 
 
 
@@ -19,16 +20,15 @@ world = universe.class_world()
 class village:
     def __init__(self):
         self.villagers = 10
-        self.fighters = []
+        self.fighters = [combat.fighter()]
 
     def new_fighter(self):
         if self.villagers > 0:
-            hero = combat.fighter()
+            self.fighters.append(combat.fighter())
             self.villagers -= 1
         else:
             new_village()  # Death of a village
-            hero = combat.fighter()
-            world.current_village.villagers -= 1
+
     def __repr__(self):
         return "vil[" + str(self.villagers) + "]"
 
@@ -43,6 +43,8 @@ def new_village():
 
 
 def choose_fighter(possible_fighters):
+    for fighter in possible_fighters:
+        print()
     return possible_fighters[0]
 
 def exploration():
@@ -58,7 +60,11 @@ def exploration():
 
 
 def day_change():
+    '''
+    Calls for events related to dawn of a new day
+    '''
 
+    # filling min. value of fighters in village
     if len(world.current_village.fighters) == 0:
         world.current_village.new_fighter()
 
@@ -72,6 +78,8 @@ class Player_Action(Enum):
     EXIT = 9
 
     def print(self):
+        #for i, action in enumerate(Player_Action):
+        #    print(i + 1, action, end="  ")
         print("1 explore forest 2 manage events 3 manage buildings 9 return to main menu")
 
 
@@ -95,17 +103,15 @@ def gameplay_loop():
 
         print("Day: ", day)
         #Player_Action.print(Player_Action())
-        print(Player_Action.EXIT)
-        choice = Player_Action(int(input()))
 
+        for i in Player_Action:
+            i.print()
+            break
 
-
-
-
+        choice = Player_Action(tools.player_input(tools.greatest_enum(Player_Action)))
 
         if choice == Player_Action.EXPLORE:
-            exploration(world.current_village.villagers)
-
+            exploration()
         elif choice == Player_Action.EVENTS:
             pass
         elif choice == Player_Action.BUILDING:

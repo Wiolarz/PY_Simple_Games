@@ -1,28 +1,26 @@
 import village
 import random
 import universe
+import tools
 
 
 
 
-
-
-
-
-
-
-
-
-
-def main_menu():
+def main_menu(launch_setting=None):
     '''
     Allows to:
     create new save
     load a save
     exit the game
     '''
-
     saved_games = []
+
+    if launch_setting == "basic_test":
+        saved_games.append(new_save())
+        village.world = saved_games[0]
+        village.gameplay_loop()
+
+
 
     choice = 0
     while choice != 9:
@@ -55,13 +53,13 @@ def new_save():
     Generation of general world state. (allows a player for a gameplay progression even after loosing village)
     :return:
     '''
-    earth = universe.class_world()
-    village.new_village(earth)
-    return earth
+    village.world = universe.class_world()
+    village.new_village()
+    return village.world
 
 
 
 
 if __name__ == '__main__':
-    main_menu()
+    main_menu("basic_test")
 
