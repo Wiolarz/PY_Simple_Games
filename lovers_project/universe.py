@@ -1,6 +1,7 @@
 import random
 
-class class_world:
+
+class Class_World:
     def __init__(self):
         self.current_village = None
         self.monsters = self.generate_monsters()
@@ -12,13 +13,14 @@ class class_world:
             stats = []
             for i in range(3):
                 stats.append(random.randint(1, 8))
-            monsters.append(monster(name, stats))
+            monsters.append(Monster(name, stats))
         return monsters
 
     def __repr__(self):
         return "save_" + str(self.current_village)
 
-class monster:
+
+class Monster:
     def __init__(self, name, stats):
         self.name = name
         self.stats = stats
@@ -41,4 +43,3 @@ class monster:
             for i in range(self.knowledge):
             '''
             return "1-8 1-8 1-8"
-

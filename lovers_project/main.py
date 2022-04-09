@@ -4,8 +4,6 @@ import universe
 import tools
 
 
-
-
 def main_menu(launch_setting=None):
     '''
     Allows to:
@@ -19,8 +17,6 @@ def main_menu(launch_setting=None):
         saved_games.append(new_save())
         village.world = saved_games[0]
         village.gameplay_loop()
-
-
 
     choice = 0
     while choice != 9:
@@ -45,19 +41,14 @@ def main_menu(launch_setting=None):
     print("Exiting the game")
 
 
-
-
-
 def new_save():
     '''
     Generation of general world state. (allows a player for a gameplay progression even after loosing village)
     :return:
     '''
-    village.world = universe.class_world()
+    village.world = universe.Class_World()
     village.new_village()
     return village.world
-
-
 
 
 if __name__ == '__main__':

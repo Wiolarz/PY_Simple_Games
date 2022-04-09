@@ -13,3 +13,9 @@ def greatest_enum(enum):
         if max_value < en.value:
             max_value = en.value
     return max_value
+
+
+def print_enum(enum):
+    for i in enum:
+        i.print()
+        break

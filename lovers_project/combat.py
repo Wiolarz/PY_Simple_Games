@@ -1,6 +1,7 @@
 import random
 
-class fighter:
+
+class Fighter:
     def __init__(self):
         self.hp = 6
 
@@ -20,12 +21,10 @@ class fighter:
         if len(self.moves) == 0:
             return 1
 
-
         player_input = self.input(len(self.moves))
         value = self.moves[player_input]
         self.moves.pop(player_input)
         return value
-
 
     def input(self, range=None):
         if range == None:
@@ -41,9 +40,7 @@ class fighter:
         elif player_input > range:
             player_input = 1
 
-
         return player_input - 1
-
 
 
 def forest_exploration(character, world_monsters):
@@ -62,15 +59,13 @@ def forest_exploration(character, world_monsters):
                 return
 
 
-
-
 def combat_info(player, monster, scoreboard):
     print("monster: ", monster.name, " ", monster.info())
     print("score: ", scoreboard)
     print("attacks: ", player.moves)
 
-def combat(player, monster):
 
+def combat(player, monster):
 
     player_score = 0
     score_board = ""
@@ -96,8 +91,3 @@ def combat(player, monster):
     combat_info(player, monster, score_board)
     print("you have lost\n")
     return False
-
-
-
-
-
