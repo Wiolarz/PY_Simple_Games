@@ -1,13 +1,23 @@
-def player_input(range=None):
-    if range == None:
+def player_interface (choices=None):
+    """
+    This is a function that should replace input system like this one inside of village.gameplay_loop
+    :param choices:
+    :return:
+    """
+    if choices is None:
+        pass
+
+
+def player_input (choices=None):
+    if choices is None:
         return 0
     choice = int(input())
-    if choice > range or choice < 0:
+    if choice > choices or choice < 0:
         return 0
     return choice
 
 
-def greatest_enum(enum):
+def greatest_enum (enum):
     max_value = 0
     for en in enum:
         if max_value < en.value:
@@ -15,7 +25,7 @@ def greatest_enum(enum):
     return max_value
 
 
-def print_enum(enum):
+def print_enum (enum):
     for i in enum:
         i.print()
         break
