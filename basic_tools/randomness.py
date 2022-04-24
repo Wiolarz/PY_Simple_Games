@@ -466,6 +466,32 @@ class known_rpg:
 
 
 
+def fate_test_less_dices():
+    attempts = 10000
+    for challenge in range(-4, 5):
+        print(challenge, end=" ")
+        fate_score = 0
+        my_theory_score = 0
+        for i in range(attempts):
+
+            # fate
+            score = 0
+            for dice in range(4):
+                score += random.choice([-1, 0, 1])
+            if score >= challenge:
+                fate_score += 1
+
+            # my theory
+
+            score = 0
+            for dice in range(2):
+                score += random.choice([-2, -1, 0, 0, 1, 2])
+            if score >= challenge:
+                my_theory_score += 1
+
+        print("{:2.2%}".format(fate_score / attempts), end=" ||  ")
+        print("{:2.2%}".format(my_theory_score / attempts))
+        print()
 
 if __name__ == '__main__':
     print("start")
@@ -480,9 +506,9 @@ if __name__ == '__main__':
     # tester.data_test()
 
 
-    tester = experiments()
-    tester.hs_quick_test()
-
+    #tester = experiments()
+    #tester.hs_quick_test()
+    fate_test_less_dices()
 
     '''tester = experiments()
 
