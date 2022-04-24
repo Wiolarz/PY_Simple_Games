@@ -50,8 +50,10 @@ def new_save():
     village.new_village()
     return village.world
 
+
 def monster_info_tests():
     earth = universe.Class_World()
+    knowledge = None
     for monster in earth.monsters:
         print("\n\n\n\n\n\n\n")
         print(monster.stats)
@@ -67,6 +69,6 @@ def monster_info_tests():
 
 
 if __name__ == '__main__':
-    #main_menu("basic_test")
-    monster_info_tests()
+    main_menu("basic_test")
+    # monster_info_tests()
 

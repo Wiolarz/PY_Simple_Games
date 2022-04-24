@@ -41,20 +41,26 @@ class Fighter:
             player_input = 1
 
         return player_input - 1
+    def hurt(self, value=None):
+        if value is None:
+            value = 1
+        self.hp -= value
+        if self.hp <= 0:
+            pass  # TODO maybe check for dying should be made here?
 
 
 def forest_exploration(character, world_monsters):
     '''
     current exploration is just 2 fights
     :param character:
-    :return:
+    :param world_monsters:
     '''
     for fights in range(2):
         monster = world_monsters[random.randrange(0, len(world_monsters))]
         if combat(character, monster):
-            monster.knowledge += 1
+            monster.update_info()
         else:
-            character.hp -= 1
+            character.hurt()
             if character.hp == 0:
                 return
 
@@ -86,7 +92,7 @@ def combat(player, monster):
             combat_info(player, monster, score_board)
             print("you have won\n")
             return True
-        elif round == 2 and player_score == 0:
+        elif round == 1 and player_score == 0:
             break
     combat_info(player, monster, score_board)
     print("you have lost\n")

@@ -9,11 +9,39 @@ from enum import Enum
 # global variable
 world = universe.Class_World()
 
+class Building:
+    def __init__(self):
+        pass
+
+class Construction_Building:
+    def __init__(self):
+        self.progress = 3
+        self.next_house = Building()
+
+    def day_update(self):
+        self.progress -= 1
+        if self.progress == 0:
+            return True
+        return False
+
+    def new_house(self):
+        print("House " + str(self.next_house) + " has been finished")
+        new_house = self.next_house
+        self.next_house = None
+        return new_house
+
+    def new_project(self):
+        if self.next_house == None:
+            self.progress = 3
+            self.next_house = Building()  # TODO list of possible building to be built
+        return "Currently " + str(self.next_house) + " is being built. Time left: " + str(self.progress)
 
 class Village:
     def __init__(self):
         self.villagers = 10
         self.fighters = [combat.Fighter()]
+        self.buildings = []
+        self.constructor = Construction_Building()
 
     def new_fighter(self):
         if self.villagers > 0:
@@ -52,13 +80,17 @@ def exploration():
 
 
 def day_change():
-    '''
+    """
     Calls for events related to dawn of a new day
-    '''
+    """
 
     # filling min. value of fighters in village
     if len(world.current_village.fighters) == 0:
         world.current_village.new_fighter()
+
+    constructor = world.current_village.constructor
+    if constructor.day_update():
+        world.current_village.buildings.append(constructor.new_house())
 
 
 class Player_Action(Enum):
@@ -100,4 +132,4 @@ def gameplay_loop():
         elif choice == Player_Action.EVENTS:
             pass
         elif choice == Player_Action.BUILDING:
-            pass
+            print(world.current_village.constructor.new_project())
