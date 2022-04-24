@@ -464,8 +464,75 @@ class known_rpg:
             print(test_range)
             print(values)
 
+    class fate:
+
+        def test(self, difficulty):
+            score = 0
+            for dice in range(4):
+                score += random.choice([-1, 0, 1])
+            return score >= difficulty
+
+        def test_using_resources(self, difficulty, re_rolls=2):
+            """
+            if player wants to use "resource" to re roll 2 dices
+            :param difficulty:
+            :return:
+            """
+            score = []
+            for dice in range(4):
+                score.append(random.choice([-1, 0, 1]))
+            if sum(score) >= difficulty:
+                return True
+
+            for i in range(re_rolls):
+                if -1 in score:
+                    score.remove(-1)
+                    score.append(random.choice([-1, 0, 1]))
+                elif 0 in score:
+                    score.remove(0)
+                    score.append(random.choice([-1, 0, 1]))
+
+                if sum(score) >= difficulty:
+                    return True
+
+            return False
 
 
+
+
+        def data_test(self):
+            attempts = 10000
+
+            for difficulty in range(-4, 5):
+                score = 0
+                for tests in range(attempts):
+                    if self.test(difficulty):
+                        score += 1
+
+                re_rolls_scores = []
+                for re_rolls in range(1, 4):
+                    re_rolls_results = 0
+                    for tests in range(attempts):
+                        if self.test_using_resources(difficulty, re_rolls):
+                            re_rolls_results += 1
+                    re_rolls_scores.append(re_rolls_results)
+
+                print("difficulty: ", difficulty, " result ", score / attempts, end="  |||  ")
+                for re_roll_value in range(1, 4):
+                    print("re_roll: ", re_roll_value, " result ", re_rolls_scores[re_roll_value - 1] / attempts, end="|||  ")
+                print()
+
+
+class lovers_project:
+    def __init__(self, number_of_attempts=None):
+        if number_of_attempts == None:
+            number_of_attempts = 100
+        self.attempts = number_of_attempts
+    def distribution_of_stats(self):
+        """
+        Each monster rolls his die, if this die has
+        :return:
+        """
 
 if __name__ == '__main__':
     print("start")
@@ -480,8 +547,12 @@ if __name__ == '__main__':
     # tester.data_test()
 
 
-    tester = experiments()
-    tester.hs_quick_test()
+    #tester = experiments()
+    #tester.hs_quick_test()
+
+    tester = known_rpg.fate()
+    tester.data_test()
+
 
 
     '''tester = experiments()
@@ -493,7 +564,7 @@ if __name__ == '__main__':
 
     tester.general_tests()
 '''
-# 3 times in 15 tryes 120 number
+# 3 times in 15 tries 120 number
 
 
 '''
