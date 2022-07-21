@@ -71,11 +71,15 @@ def permutation():
 def what_team_needs(team_name="liquid"):
     """
     After providing team name, program provides the user with teams placements needed to get invite
+
+    Contains bugs beascoast score is not correct
     :return:
     """
     for team_name in major_teams:
-        print("\n\n\n")
+        print("\n")
         print(team_name)
+        if team_name == "boom":
+            print()
         points = [major_points[x] for x in [7, 5, 3, 2, 1, 0]]
         points.insert(0, 0)  # first position in array represent not getting points
 
@@ -88,7 +92,7 @@ def what_team_needs(team_name="liquid"):
                     continue
 
                 for i, enemy_result in enumerate(points):
-                    if i == place and i not in [5, 7]:  # don't calculate the same placements
+                    if (i == place and i != 0) and i not in [5, 7]:  # don't calculate the same placements
                         continue
                     enemy_score = teams[enemy_team] + enemy_result
                     if enemy_score > score:
@@ -107,12 +111,21 @@ def what_team_needs(team_name="liquid"):
                         sum_of_placements[spot] -= 1
 
 
-
+            number_of_any_teams = 0
+            for team in stronger_teams:
+                if team[1] == 0:
+                    number_of_any_teams += 1
 
             # OUTPUT
             placement_translator = ["any", "TOP-8", "TOP-6", "TOP-4", "TOP-3", "TOP-2", "TOP-1"]
-            if len(stronger_teams) - len(wrong_teams) > 12:
-                print(placement_translator[place], stronger_teams)
+            if number_of_any_teams >= 8:
+                print(placement_translator[place], "defeat")
+            elif len(stronger_teams) - len(wrong_teams) > 8:
+                print(placement_translator[place], end=" ")
+                for team in stronger_teams:
+
+                    print("|", team[0],"_", placement_translator[team[1]], sep="", end="|  ")
+                print()
             else:
                 print(placement_translator[place], "success")
                 break
