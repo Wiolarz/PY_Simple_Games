@@ -347,6 +347,16 @@ class known_rpg:
                     score += 1
             print(score / attempts)
 
+    class carder:
+        """
+        https://postimg.cc/yJLwV08s
+        https://postimg.cc/PNpBjpsn
+        https://postimg.cc/47njnnYt
+        https://coffeesniffer.itch.io/carder-rpg
+        https://www.reddit.com/r/RPGdesign/comments/x8w4bk/carder_rpg_v42/
+        """
+
+
 def fate_test_less_dices():
     attempts = 10000
     for challenge in range(-4, 5):

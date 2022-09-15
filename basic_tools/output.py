@@ -37,7 +37,8 @@ def roman_numbers(value):
     return result
 
 
-
+def percent(value, space=""):
+    print("{:2.2%}".format(value), end=space)
 
 '''
 we have a number x

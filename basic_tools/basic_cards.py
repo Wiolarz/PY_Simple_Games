@@ -6,7 +6,7 @@ class Card:
         self.color = color
 
     def str_color(self):
-        color_symbols = ["♠", "♥", "♦", "♣"]
+        color_symbols = ["♣", "♦", "♥", "♠"]
         return color_symbols[self.color]
 
     def str_value(self):
