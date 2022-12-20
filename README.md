@@ -24,10 +24,6 @@ Simple game centered around estimation of the strength of the enemy
 ### Main folder
 Unorganised mess
 
-blackjack - stub that is meant to simulate black jack game
-
-fantasy_charter, card - my own paper rpg centered around classic cards
-
 connect_four - basic game simulation
 
 dota_major - simulation of possible results for the dpc season of dota esports
@@ -37,3 +33,23 @@ godzilla - basic tower defense
 random_card_sequance - vsauce random game simulation
 
 sudoku - stub that attempts to generate working sudoku grid
+
+
+
+### RPG
+
+Dungeon_World - a PbtA RPG system simulation
+
+fantasy_charter, card - my own paper rpg centered around classic cards
+
+RPC - role-playing-dice my own RPG system 
+
+### cards_games
+
+blackjack - stub that is meant to simulate black jack game
+
+### board_games
+files that aim to simulate board games
+
+Alchemist - a board game about discovering a set
+
