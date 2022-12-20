@@ -173,46 +173,46 @@ class known_rpg:
             print(score / attempts)
 
     class ugis:
-        def basic(self, dices):
+        def basic(self, dice):
             # its a random system from ugis rpg
-            # it rolls maximum of 5 at a time while adding bigger number of dices as auto success
-            # dice is D6, 2,4,6 = success while 6 is additional roll
+            # it allows to roll maximum of 5 dice at a time, additional dice are treated as an auto success
+            # dice size is an D6: 2,4,6 = success while 6 is additional roll
             success = 0
-            if dices > 5:
-                success = dices - 5
-                dices = 5
-            while dices > 0:
-                dices -= 1
+            if dice > 5:
+                success = dice - 5
+                dice = 5
+            while dice > 0:
+                dice -= 1
                 roll = random.randint(1, 6)
                 if roll in [2, 4]:
                     success += 1
                 elif roll == 6:
                     success += 1
-                    dices += 1
+                    dice += 1
             return success
 
-        def data(self, reapets):
+        def data(self, repeats):
             x = 0
-            for i in range(reapets):
+            for i in range(repeats):
                 x += self.basic(1)
-            return x / reapets
+            return x / repeats
 
-        def new_basic(self, dices):
+        def new_basic(self, dice):
             success = 0
-            if dices > 5:
-                success = dices - 5
-                dices = 5
-            for i in range(dices):
+            if dice > 5:
+                success = dice - 5
+                dice = 5
+            for i in range(dice):
                 roll = random.randint(1, 6)
                 if roll > 2:
                     success += 1
             return success
 
-        def new_data(self, reapets):
+        def new_data(self, repeats):
             x = 0
-            for i in range(reapets):
+            for i in range(repeats):
                 x += self.new_basic(1)
-            return x / reapets
+            return x / repeats
 
     class arcane_ugly:
         def character_generation(self):
@@ -460,3 +460,5 @@ if __name__ == '__main__':
 18 = 9.333%
 11 = 12,5
 '''
+
+
