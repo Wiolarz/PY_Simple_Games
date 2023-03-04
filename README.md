@@ -3,9 +3,9 @@
 This project is a compilation of mostly board games
 translated to python, for research and training purposes
 
-##List of files:
+## List of files:
 
-###Folder "basic tools":
+### Folder "basic tools":
 folder serves as a list of functions to be used in the rest of the project. But it also contains many standalone experiments 
 
 basic_cards - list of objects to manage classic playing cards
