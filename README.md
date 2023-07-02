@@ -5,6 +5,12 @@ translated to python, for research and training purposes
 
 ## List of files:
 
+### Sudoku
+project 
+toolbox - list of functions that can help solve more advanced sudoku variants
+
+sudoku_generator - stub that attempts to generate working sudoku grid
+
 ### Folder "basic tools":
 folder serves as a list of functions to be used in the rest of the project. But it also contains many standalone experiments 
 
@@ -26,13 +32,11 @@ Unorganised mess
 
 connect_four - basic game simulation
 
-dota_major - simulation of possible results for the dpc season of dota esports
-
 godzilla - basic tower defense
 
 random_card_sequance - vsauce random game simulation
 
-sudoku - stub that attempts to generate working sudoku grid
+
 
 
 

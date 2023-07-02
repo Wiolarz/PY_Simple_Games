@@ -1,7 +1,7 @@
 """
 Sudoku alpha is a simple version, with random solver
 """
-
+import copy
 import random
 
 def draw_board(board):

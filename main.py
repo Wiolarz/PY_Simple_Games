@@ -25,14 +25,7 @@ def testitng_roman_numbers():
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('PyCharm')
-    '''words = ["apple", "it", "creek", "pelican", "subsequent", "horse",
-             "apothecary"]
-    wordslen = [len(word) for word in words]
-    print(wordslen[-1])
-    '''
-    a = 5
-    while a != 2 and a != 1:
-        a -= 1
+
 
 
 
