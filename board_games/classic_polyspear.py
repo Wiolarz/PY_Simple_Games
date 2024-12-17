@@ -21,27 +21,13 @@ class Vector2i:
 	def __eq__(self, value):
 		return self.x == value.x and self.y == value.y
 
-
-
-
 #symbols:
-"""
-0 - Empty
-1 - axe
-2 - spear
-3 - SHIELD
-4 - bow
-5 - push
-"""
 EMPTY = 0
 AXE = 1
 SPEAR = 2
 SHIELD = 3
 BOW = 4
 PUSH = 5
-
-
-
 
 
 class Unit:
@@ -247,15 +233,15 @@ class BattleManager:
 	DEFENDER = 1
 
 
-	battling_armies = [[10, 11, 12], [20, 21, 22]]
-	UNIT_POINTS = [2, 3, 4]
 
-
+	# end of the battle verification
 	attacker_units = []
 	defender_units = []
+
 	current_player : int = ATTACKER
 	selected_unit : Unit = Unit(True, 0)
-	units_left_to_be_summoned : list
+
+	units_left_to_be_summoned : int
 
 	#endregion
 
@@ -266,7 +252,7 @@ class BattleManager:
 		else:
 			self.current_player = self.ATTACKER
 
-	def IsLegalMove(self, coord : Vector2i) -> int:
+	def is_legal_move(self, coord : Vector2i) -> int:
 		"""
 		Function checks 2 things:
 		* 1 target coord is a Neighbour of a selected_unit
@@ -274,58 +260,58 @@ class BattleManager:
 		*	 target coord doesn't contatin an Enemy Unit with a SHIELD pointing at our selected_unit
 		*
 		* @param coord
-		* @param ResultSide
+		* @param result_side
 		* @return True if selected Unit can move on a given coord
 		"""
 		# 1
-		ResultSide = self.GRID.AdjacentSide(self.selected_unit.coord, coord)
-		if ResultSide == None:
+		result_side = self.GRID.AdjacentSide(self.selected_unit.coord, coord)
+		if result_side is None:
 			return -1
 		# 2
 		enemy_unit = self.GRID.get_unit(coord)
-		if enemy_unit == None:  # Is there a Unit in this spot?
-			return ResultSide
+		if enemy_unit is None:  # Is there a Unit in this spot?
+			return result_side
 
 		if self.selected_unit.symbols[0] == SHIELD:
 			return -1 # selected_unit can't deal with enemy_unit
 		elif self.selected_unit.symbols[0] == PUSH:
-				return ResultSide # selected_unit ignores enemy_unit SHIELD
+				return result_side # selected_unit ignores enemy_unit SHIELD
 
 		# Does enemy_unit has a SHIELD?
-		if enemy_unit.get_symbol(ResultSide + 3) == SHIELD:
+		if enemy_unit.get_symbol(result_side + 3) == SHIELD:
 			return -1
-		return ResultSide
+		return result_side
 
-	def MoveUnit(self, unit : Unit, EndCord : Vector2i, side: int) -> None:
+	def move_unit(self, unit : Unit, end_cord : Vector2i, side : int) -> None:
 		# Move General function
 		"""
-		* Move this unit to EndCord
+		* Move this unit to end_cord
 		*
-		* @param EndCord Position at which unit will be placed
+		* @param end_cord Position at which unit will be placed
 		"""
 		unit.rotate(side) # 1
 		#TODO: if SHIELDs: # maybe check for every unit
-		if self.EnemyDamage(unit):
+		if self.enemy_damage(unit):
 			self.kill_unit(unit)
 			return
 		self.unit_action(unit)
 
-		self.GRID.change_unit_position(unit, EndCord)
-		if self.EnemyDamage(unit):
+		self.GRID.change_unit_position(unit, end_cord)
+		if self.enemy_damage(unit):
 			self.kill_unit(unit)
 			return
 
 		self.unit_action(unit)
 
 
-	def EnemyDamage(self, target : Unit) -> bool:
+	def enemy_damage(self, target : Unit) -> bool:
 		# Returns True is Enemy spear can kill the target
-		Units = self.GRID.adjacent_units(target.coord)
+		units = self.GRID.adjacent_units(target.coord)
 		for side in range(6):
-			if (Units[side] != None and Units[side].controller != target.controller):
+			if (units[side] != None and units[side].controller != target.controller):
 				if (target.get_symbol(side) == SHIELD):  # Do we have a SHIELD?
 					continue
-				if (Units[side].get_symbol(side + 3) == SPEAR): # Does enemy has a spear?
+				if (units[side].get_symbol(side + 3) == SPEAR): # Does enemy has a spear?
 					return True
 		return False
 
@@ -374,7 +360,7 @@ class BattleManager:
 					self.kill_unit(enemy_unit)
 					continue
 				self.GRID.change_unit_position(enemy_unit, self.GRID.GetDistantCord(unit.coord, side, 2))
-				if self.EnemyDamage(enemy_unit): # Simple push	
+				if self.enemy_damage(enemy_unit): # Simple push	
 					self.kill_unit(enemy_unit)
 				continue
 			
@@ -409,7 +395,7 @@ class BattleManager:
 			* Units are placed by the players in subsequent order on their chosen "Starting Locations"
 			* inside the area of the gameplay board.
 			"""
-			self.SummonUnit(coord)
+			self.summon_unit(coord)
 		else:  # gameplay phase
 			self.gameplay(coord)
 		self.selected_unit = None  # IMPORTANT
@@ -417,7 +403,7 @@ class BattleManager:
 
 	def gameplay(self, coord : Vector2i) -> None:
 		#print("gameplay is working")
-		side = self.IsLegalMove(coord) # Gets Updated with IsLegalMove()
+		side = self.is_legal_move(coord) # Gets Updated with is_legal_move()
 		if side != -1: # spot is empty + we aren't hitting a SHIELD
 			# 1 rotate
 			# 2 Check for Spear
@@ -425,7 +411,7 @@ class BattleManager:
 			# 4 Move
 			# 5 Check for Spear
 			# 6 Actions
-			self.MoveUnit(self.selected_unit, coord, side)
+			self.move_unit(self.selected_unit, coord, side)
 			#print(FString::Printf(TEXT("DIRECTION_%d"), side))
 			#testkill_unit(coord)
 
@@ -434,7 +420,7 @@ class BattleManager:
 			self.switch_player_turn()
 
 
-	def SummonUnit(self, coord : Vector2i) -> None:
+	def summon_unit(self, coord : Vector2i) -> None:
 		"""
 		* Summon currently selected unit to a gameplay Board
 		*
@@ -443,20 +429,20 @@ class BattleManager:
 		"""
 		
 		# check if unit is already summoned
-		SelectedUnitTileType : int = self.GRID.get_tile_type(self.selected_unit.coord)
-		if SelectedUnitTileType != Grid.SENTINEL:
+		selected_unit_tile_type : int = self.GRID.get_tile_type(self.selected_unit.coord)
+		if selected_unit_tile_type != Grid.SENTINEL:
 			print("This Unit has been already summoned")
 			return
 		
-		SelectedHexType = self.GRID.get_tile_type(coord)
+		selected_hex_type = self.GRID.get_tile_type(coord)
 		bSelectedcurrent_playerSpawn = \
-			(SelectedHexType == Grid.ATTACKER_TILE and self.current_player == BattleManager.ATTACKER) or \
-			(SelectedHexType == Grid.DEFENDER_TILE and self.current_player == BattleManager.DEFENDER)
+			(selected_hex_type == Grid.ATTACKER_TILE and self.current_player == BattleManager.ATTACKER) or \
+			(selected_hex_type == Grid.DEFENDER_TILE and self.current_player == BattleManager.DEFENDER)
 		if not bSelectedcurrent_playerSpawn:
-			print("Thats a wrong summon location")  # TODO: Don't reset selected_unit
+			print("That's a wrong summon location")  # TODO: Don't reset selected_unit
 			return
 		print("You summoned a Unit")
-		# TeleportUnit(coord)
+
 		self.GRID.change_unit_position(self.selected_unit, coord)
 		if self.current_player == BattleManager.ATTACKER:
 			self.attacker_units.append(self.selected_unit)
@@ -490,25 +476,27 @@ class BattleManager:
 #region Replay translator
 
 def translate_position_to_simple_form(unit):
-    result = 0
-    match unit.coord.y:
-        case 0:
-            result = unit.coord.x - 2
-        case 1:
-            result = 6 + unit.coord.x - 2
-        case 2:
-            result = 10 + unit.coord.x - 1
-        case 3:
-            result = 15 + unit.coord.x - 2
-        case 4:
-            result = 19 + unit.coord.x
-    return result
+	result = 0
+	match unit.coord.y:
+		case 0:
+			result = unit.coord.x - 2
+		case 1:
+				result = 6 + unit.coord.x - 2
+		case 2:
+			result = 10 + unit.coord.x - 1
+		case 3:
+			result = 15 + unit.coord.x - 2
+		case 4:
+			result = 19 + unit.coord.x
+	return result + 2  # 0 is for dead unit, 1 is for unsummoned unit
 
-
-def deep_test_map_save(unit_grid):
+def deep_test_map_save(unit_grid : list[list[Unit]], is_summon_phase : bool = False):
 	unit_name_ids = ["elf1", "elf2", "elf3", "orc1", "orc2", "orc3"]
 	result = [0, 0,  0, 0,  0, 0,
 			  0, 0,  0, 0,  0, 0]
+	if is_summon_phase:
+		result = [1, 0, 1, 0, 1, 0,
+				  1, 0, 1, 0, 1, 0]
 	for row in unit_grid:
 		for unit in row:
 			if unit is None:
@@ -519,7 +507,7 @@ def deep_test_map_save(unit_grid):
 
 	return result
 
-def main_translator(file_name : str):
+def main_translator(file_name : str, replay_idx : int = 1):
 	replay_file : str = open(file_name, "r")
 	replay_text = replay_file.read()
 	replay_text = replay_text.split("script = ExtResource(") #
@@ -536,26 +524,41 @@ def main_translator(file_name : str):
 
 
 	unit_id_text = replay_text[0].split("\n")
-	for unit in unit_id_text[4:10]:
-		unit_id_names[unit[88]] = unit[73:77]
+
+
+
+
+	for unit in unit_id_text[2:11]:
+		#print(unit[59:63])
+		if unit[59:63] == "Unit":
+			unit_id_names[unit[88:95]] = unit[73:77]
+			#unit_id_names[unit[88]] = unit[73:77]
 
 	print(unit_id_names)
 
 	BM = BattleManager()
 	BM.setup_game()
 
+	replay_output_for_ai : str = ""
+	if replay_idx == 2:
+		print("xd")
+
 	for i, summon_move in enumerate(replay_text[1:7]):
 		summon_move_split = summon_move.split("\n")
 		#unit_id
 		target_tile_coord = Vector2i(summon_move_split[4][-5], summon_move_split[4][-2])
 		#print(unit_id)
-		unit_name = unit_id_names[summon_move_split[2][-3]]
+		#unit_name = unit_id_names[summon_move_split[2][-3]]
+		unit_key_name = summon_move_split[2][27:-2]
+		unit_name = unit_id_names[unit_key_name]
 		print(unit_name, "->", target_tile_coord)
 
 		BM.selected_unit = Unit(i % 2, unit_name_ids.index(unit_name))
 		BM.input_listener(target_tile_coord)
 
-		
+		game_state = deep_test_map_save(BM.GRID.unit_grid, True)
+		replay_output_for_ai += str(game_state) + "\n"
+
 
 	for i, action_move in enumerate(replay_text[7:-1]):
 		action_move_split = action_move.split("\n")
@@ -564,30 +567,31 @@ def main_translator(file_name : str):
 		target_tile_coord = Vector2i(action_move_split[3][-5], action_move_split[3][-2])
 		#print(unit_id)
 
+		if False:
+			print("---------------------")
+			for row_id, row in enumerate(BM.GRID.unit_grid):
+				print(row_id, "|", end="")
+				for tile in row:
+					if tile is None:
+						print("    |", end="")
+					else:
+						print("", tile, "|", sep="", end="")
+				print("")
+			print("---------------------")
 
-		aa_browse = BM.GRID.unit_grid
-		print("---------------------")
-		for row_id, row in enumerate(aa_browse):
-			print(row_id, "|", end="")
-			for tile in row:
-				if tile is None:
-					print("    |", end="")
-				else:
-					print("", tile, "|", sep="", end="")
-			print("")
-		print("---------------------")
-		print(deep_test_map_save(aa_browse))
 		print(move_source_coord, "->", target_tile_coord)
 
 		BM.input_listener(move_source_coord)
 		if i == 8: # 7
 			print("check")
-
-
 		BM.input_listener(target_tile_coord)
+		game_state = deep_test_map_save(BM.GRID.unit_grid)
+		print(game_state)
+		replay_output_for_ai += str(game_state) + "\n"
+
 
 	print("---------------------")
-	for row_id, row in enumerate(aa_browse):
+	for row_id, row in enumerate(BM.GRID.unit_grid):
 		print(row_id, "|", end="")
 		for tile in row:
 			if tile is None:
@@ -596,10 +600,38 @@ def main_translator(file_name : str):
 				print("", tile, "|", sep="", end="")
 		print("")
 	print("---------------------")
-	print(deep_test_map_save(aa_browse))
 	
 	print("end of replay")
 
+	finish_replay_for_ai(replay_output_for_ai, game_state, replay_idx)
+
+
+def finish_replay_for_ai(replay_text : str, last_state : list[int], replay_idx : int) -> None:
+	# used to calculate how big of an advantage winner got (this point system is also used during tournament play)
+	UNIT_POINTS = [2, 3, 4]
+	attacker_points = 0
+	defender_points = 0
+	unit_idx = -1
+	for unit_from_table_idx in range(0, len(last_state), 2):
+		unit_idx += 1
+		if last_state[unit_from_table_idx] > 0:
+			if unit_idx < 3:
+				attacker_points += UNIT_POINTS[unit_idx]
+			else:
+				defender_points += UNIT_POINTS[unit_idx % 3]
+	if attacker_points * defender_points != 0:  # only one of the team should have points left
+		print("ERROR: replay doesn't contain the game end")
+		return
+	winner = 0  # Attacker won
+	if attacker_points < defender_points:
+		winner = 1
+
+	title : str = str(winner) + "_" + str(attacker_points + defender_points) + "_" + str(replay_idx)
+	replay_text = "\n".join([title, replay_text])
+
+	# saving file
+	new_replay_file = open(title + ".txt", "w")
+	new_replay_file.write(replay_text)
 
 
 
@@ -620,10 +652,20 @@ if __name__ == "__main__":
 	replay_name = "2024-12-09T22_31_07-deathguard12_Wiolarz.tres"
 	replay_name = "2024-12-09T22_29_21-Wiolarz_deathguard12.tres"
 
+	folder_path += "/turniej_V"
 
-	relative_path_to_file = os.path.join(folder_path, replay_name)
-	absolute_path_to_file = os.path.realpath(relative_path_to_file)
+	#relative_path_to_file = os.path.join(folder_path, replay_name)
+	#absolute_path_to_file = os.path.realpath(relative_path_to_file)
 
+	absolute_folder_path = os.path.realpath(os.path.join(folder_path))
+	#main_translator(absolute_path_to_file)
+	replay_idx = 0
+	for replay in os.listdir(absolute_folder_path):
+		replay_idx += 1
+		if replay_idx == 3:
+			break
 
-	main_translator(absolute_path_to_file)
+		relative_path_to_file = os.path.join(folder_path, replay)
+		absolute_path_to_file = os.path.realpath(relative_path_to_file)
+		main_translator(absolute_path_to_file, replay_idx)
 	
